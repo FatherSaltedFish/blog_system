@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <link rel="stylesheet" href="../bootstrap-5.0.0-beta1-dist/css/bootstrap.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../bootstrap-5.0.0-beta1-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../showdown-master/dist/showdown.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top dropdown">
+    <a class="navbar-brand" href="#" th:text="${session.attendant.getUsername()}" data-toggle="dropdown">喵卷星</a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Brand/logo -->
+    <!--    <a class="navbar-brand" href="#">-->
+    <!--        <img src="favicon.ico" alt="logo" style="width:40px;">-->
+    <!--    </a>-->
+
+    <!-- Links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/attendant/managementblog">管理博文</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/attendant/managementuser">管理用户</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/attendant/managementmessage">用户留言</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Clogin">切换账号</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/">注销</a>
+        </li>
+    </ul>
+</nav>
+
+<div th:switch="${opttype}" style="margin-top:80px">
+<!--    展示所有博文-->
+    <div th:case="main">
+        <div class="container-fluid row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <span>搜索:</span>
+                <input id="search">
+            <table class="table table-striped table-bordered table-hover" style="margin-top:30px">
+                <thead>
+                <tr>
+                    <th>
+                        博文ID
+                    </th>
+                    <th>
+                        博文题目
+                    </th>
+                    <th>
+                        创建时间
+                    </th>
+                    <th>
+                        创建人ID
+                    </th>
+                    <th>
+                        查看博文
+                    </th>
+                    <th>
+                        删除博文
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr name="bloglist" th:each="blog:${BlogList}">
+                    <td th:text="${blog.id}"></td>
+                    <td th:text="${blog.title}"></td>
+                    <td th:text="${blog.created}"></td>
+                    <td th:text="${blog.userid}"></td>
+                    <td><a th:href="@{/attendant/showblog(id=${blog.id})}" >查看博文</a></td>
+                    <td><a th:href="@{/attendant/deleteblog(id=${blog.id})}" >删除博文</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+<!--    展示所有用户-->
+    <div th:case="managementuser">
+        <div class="container-fluid row">
+            <div class="col-sm-2">
+                </div>
+            <div class="col-sm-8">
+                <span>搜索：</span>
+                <input id="search"></input>
+                <table class="table table-striped table-bordered table-hover" style="margin-top:30px">
+                        <thead>
+                        <tr>
+                            <th>
+                                用户ID
+                            </th>
+                            <th>
+                                用户名
+                            </th>
+                            <th>
+                                密码
+                            </th>
+                            <th>
+                                电话
+                            </th>
+                            <th>
+                                邮箱
+                            </th>
+                            <th>
+                                修改密码
+                            </th>
+                            <th>
+                                删除用户
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr name="userlist" th:each="user:${UserList}">
+                            <td th:text="${user.userid}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.pwd}"></td>
+                            <td th:text="${user.tel}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td><a th:onclick="'changepwd('+${user.userid}+')'" >修改密码</a></td>
+                            <td><a th:href="@{/attendant/deleteuser(id=${user.userid})}" >删除用户</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+<!--    展示信息-->
+    <div th:case="managementmessage">
+        <div class="container-fluid row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <table class="table table-striped table-bordered table-hover" style="margin-top:30px">
+                    <thead>
+                    <tr>
+                        <th>
+                            发送者姓名
+                        </th>
+                        <th>
+                            邮箱
+                        </th>
+                        <th>
+                            留言
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="message:${MessageList}">
+                        <td th:text="${message.name}"></td>
+                        <td th:text="${message.email}"></td>
+                        <td th:text="${message.message}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!--    展示博文-->
+    <div th:case="showblog">
+        <div class="container-fluid row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <h2 th:text="${Blog.title}"></h2>
+                <input type="hidden" id="BlogID" th:value="${Blog.id}">
+                <hr style="filter: alpha(opacity=100,finishopacity=0,style=1)" width="80%" color='#987cb9' size=3>
+<!--                <input type="hidden" id="input" th:value="${Blog.content}">-->
+                <div id="output"></div>
+                <div th:each="comment:${CommentList}" th:id="${comment.id}">
+                    <hr style="filter: alpha(opacity=100,finishopacity=0,style=1)" width="80%" color='#987cb9' size=3>
+                    <a th:text="${comment.userid}" name="user_id" style="color: #0b5ed7"></a> <span class="colon">:</span> <span class="floor-num"></span> <span th:text="${comment.content}"></span>
+                    <span th:text="${comment.created}" ></span>
+                    <a style="color: #0c63e4" th:onclick="'deleteComment('+${comment.id}+')'">删除</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script language="JavaScript" type="text/javascript" th:inline="javascript">
+
+    //删除评论
+    function deleteComment(comment_id){
+        $.ajax({
+            method:"post",
+            url:"/deleteComment",
+            data:{id:comment_id},
+            success:function (){
+                $("#"+comment_id).remove();
+            }
+        })
+    }
+    //修改密码
+    function  changepwd(idno){
+        var pwd=prompt("请输入更改的密码");
+        if(pwd=="") {
+            alert("修改密码不能为空");
+            return false;
+        }
+        if(confirm("你确认修改密码为："+pwd+"吗？")==true)
+            window.location.replace("/attendant/changepwd?idno="+idno+"&pwd="+pwd);
+        else
+            return false;
+    }
+
+    $(document).ready(function(){
+        //显示博文
+        if([[${opttype}]] == "showblog") {
+            $.ajax({
+                method:"post",
+                url:"/getBlogContent?id="+document.getElementById("BlogID").value,
+                success:function (data){
+                    // var text = document.getElementById("input").value;
+                    var converter = new showdown.Converter();
+                    var html = converter.makeHtml(data);
+                    document.getElementById("output").innerHTML = html;
+
+                }
+            })
+        }
+        //获取用户名
+        $.each($("a[name='user_id']"),function (){
+            var user_name=null;
+            var user_id=$(this).text()
+            $.ajax({
+                async:false,
+                method: "get",
+                url:"/getusername?id="+user_id,
+                success:function (data){
+                    user_name=data;
+                }
+            })
+            $(this).text(user_name);
+        })
+
+        //搜索框（博文）
+        $(document).ready(function (){
+            if([[${opttype}]] == "main") {
+                $("#search").keyup(function () {
+                    $.each($("tr[name='bloglist']"), function () {
+                        console.log($(this).find($("td"))[1].innerHTML)
+                        if ($(this).find($("td"))[0].innerHTML.indexOf(document.getElementById("search").value) >= 0 || $(this).find($("td"))[1].innerHTML.indexOf(document.getElementById("search").value) >= 0) {
+                            $(this).show()
+                        } else
+                            $(this).hide()
+                    })
+                })
+            }
+        })
+        //搜索框（用户）
+        $(document).ready(function (){
+            if([[${opttype}]] == "managementuser") {
+                $("#search").keyup(function () {
+                    $.each($("tr[name='userlist']"), function () {
+                        console.log($(this).find($("td"))[1].innerHTML)
+                        if ($(this).find($("td"))[0].innerHTML.indexOf(document.getElementById("search").value) >= 0 || $(this).find($("td"))[1].innerHTML.indexOf(document.getElementById("search").value) >= 0) {
+                            $(this).show()
+                        } else
+                            $(this).hide()
+                    })
+                })
+            }
+        })
+
+    })
+</script>
+</html>

@@ -1,0 +1,152 @@
+.h {
+    position: relative;
+    z-index: 10;
+}
+.wrapper {
+    width: 1101px;
+    height: 200px;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("../images/pic05.jpg");
+    background-position: 50% ;
+    background-size: cover;
+    padding-top: 116px;
+}
+.h .h-basic {
+    float: left;
+    color: #fff;
+    font-size: 0;
+    margin: 20px 0 0 20px;
+    height: 54px;
+    width: 750px;
+}
+.h .h-basic .h-basic-spacing {
+    margin-top: 8px;
+}
+.h .h-avatar {
+    position: relative;
+    float: left;
+    width: 64px;
+    height: 64px;
+    border: 2px solid hsla(0,0%,100%,.4);
+    border-radius: 52px;
+}
+.h #h-avatar {
+    width: 64px;
+    height: 64px;
+    background: #fff;
+    border-radius: 48px;
+}
+.h .h-avatar .avatar-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    background: rgba(0,0,0,.6);
+    font-size: 12px;
+    color: #fff;
+    line-height: 64px;
+    text-align: center;
+    opacity: 0;
+    border-radius: 50%;
+    transition: opacity .2s;
+}
+.h #h-name {
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: 700;
+    line-height: 18px;
+    font-size: 18px;
+    color: #ffffff;
+}
+.h #h-sign {
+    background: transparent;
+    border-radius: 4px;
+    border: none;
+    box-shadow: none;
+    color: #fffa82;
+    font-size: 12px;
+    font-family: Microsoft Yahei;
+    line-height: 26px;
+    height: 26px;
+    margin-left: -5px;
+    padding: 0 5px;
+    position: relative;
+    top: -1px;
+    width: 730px;
+}
+.n {
+    margin-bottom: 10px;
+}
+.wrapper2 {
+    width: 1101px;
+    margin: 0 auto;
+    position: relative;
+}
+.n .n-inner {
+    height: 66px;
+    background: #fff;
+    box-shadow: 0 0 0 1px #eee;
+    border-radius: 0 0 4px 4px;
+    padding: 0 20px;
+    font-size: 0;
+}
+.clearfix {
+    display: block;
+}
+.n .n-tab-links {
+    display: inline-block;
+    font-size: 0;
+    vertical-align: middle;
+}
+.n .n-btn {
+    display: inline-block;
+    font-size: 0;
+    line-height: 66px;
+    margin-right: 16px;
+    position: relative;
+}
+.n .n-tab-links .iconfont {
+    display: inline-block;
+    width: 20px;
+    font-size: 20px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.n .n-text {
+    font-size: 13px;
+}
+.clearfix3 {
+    display: block;
+}
+
+.wrapper3 {
+    width: 1101px;
+    margin: 0 auto;
+    position: relative;
+}
+#page-index .col-1 {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    float: left;
+    padding: 15px 20px;
+    width: 700px;
+}
+#page-index .col-2 {
+    float: right;
+    width: 350px;
+}
+.h .m-level {
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    /*color: #fff;*/
+    padding: 0 5px;
+    /*background-color: #f45a8d;*/
+    vertical-align: middle;
+    margin-right: 5px;
+}

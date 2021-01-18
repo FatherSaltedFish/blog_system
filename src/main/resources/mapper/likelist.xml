@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.repository.LikeListMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.model.LikeList">
+        <constructor>
+            <arg column="userid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+            <arg column="commentid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        userid,commentid
+    </sql>
+
+    <select id="selectNumberBycommentid" resultType="java.lang.Integer">
+        select count(*)
+        from likelist
+        where commentid=#{commentid}
+    </select>
+
+    <insert id="insert">
+        insert into likelist (userid,commentid) values (#{userid},#{commentid})
+    </insert>
+
+    <select id="selectByPrimaryKey" resultType="java.lang.Integer">
+        select count(*)
+        from likelist
+        where commentid=#{commentid} and userid=#{userid}
+    </select>
+
+    <delete id="delete">
+        delete
+        from likelist
+        where commentid=#{commentid} and userid=#{userid}
+    </delete>
+
+
+</mapper>

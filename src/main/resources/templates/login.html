@@ -1,0 +1,270 @@
+<!doctype html>
+<!--suppress ALL-->
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>登录</title>
+    <link rel="stylesheet" href="css/Login.css">
+    <link rel="stylesheet" type="text/css" href="../css/verify.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/verify.js" ></script>
+    <script src="../js/jquery.popup.js"></script>
+    <style>
+        .item {
+            max-width: 65%;
+            padding: 1em;
+            background: #eee;
+            display: none;
+            position: relative;
+            -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+            border-radius: 3px;
+            color: #000;
+        }
+
+        .item-close {
+            cursor: pointer;
+            right: 5px;
+            top: 5px;
+            position: absolute;
+            background: #222;
+            color: #fff;
+            border-radius: 100%;
+            font-size: 14px;
+            height: 24px;
+            line-height: 22px;
+            text-align: center;
+            width: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div th:switch="${model}">
+        <h2 th:case="login">喵博客登录</h2>
+        <h2 th:case="Clogin">管理员登录</h2>
+        <h2 th:case="register">注册</h2>
+    </div>
+
+
+
+    <form id="login-form" th:action="${goway}" method="post" onsubmit="return check()">
+        <input type="hidden"  id="opttype" th:value="${model}">
+        <div th:switch="${model}" class="inputBox">
+            <input  th:case="login" type="tel" name="tel" required="" pattern="[0-9]{11}" >
+            <input  th:case="Clogin" type="tel" name="tel" required="" pattern="[0-9]{11}" >
+            <input  th:case="register" type="tel" name="tel" required="" pattern="[0-9]{11}" id="tel" onchange="checktel(this.value)">
+            <label>手机号/账号</label>
+        </div>
+        <label id="label_tel"></label>
+        <div class="inputBox">
+            <input type="password" id="pwd" name="pwd" required="" >
+            <label>密码</label>
+        </div>
+        <label></label>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="password" id="agpwd" name="agpwd" required=""  onblur="checkpwd()" >
+                <label>再次输入密码</label>
+                <div id="msg" style="color:red;"></div>
+            </div>
+            <label id="label_pwd"></label>
+        </div>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="email" name="email" required="" id="email" onblur="checkemail(this.value)">
+                <label>邮箱</label>
+            </div>
+            <label id="label_email"></label>
+        </div>
+        <div th:switch="${model}">
+            <div th:case="register" class="inputBox">
+                <input type="username" name="username" required="" >
+                <label>用户名</label>
+            </div>
+        </div>
+        <div th:switch="${model}" align="center">
+            <input th:case="login" class="center-block" type="submit" name="" value="登录">
+            <input th:case="Clogin" class="center-block" type="submit" name="" value="登录">
+            <input th:case="register" class="center-block" type="submit" id="button_register" name="" value="注册" >
+        </div>
+       //
+
+
+        <div th:if="${ismember}" class="wrong">
+            <h5 id="wrong" th:text="${wrong}"></h5>
+        </div>
+        <div th:if="!${ismember}" class="wrong">
+            <h5 id="wrong" ></h5>
+        </div>
+        <div th:switch="${model}" align="center">
+            <div th:case="login" calss="other">
+                <a href="/register" id="register">用户注册</a>
+                <a href="/Clogin" id="Clogin">管理员登录</a>
+            </div>
+            <div th:case="Clogin" calss="other">
+                <a href="/register" id="register">用户注册</a>
+                <a href="/login" id="Clogin">用户登录</a>
+            </div>
+            <div th:case="register" calss="other">
+                <a href="/login" id="register">用户登录</a>
+                <a href="/Clogin" id="Clogin">管理员登录</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <div id="item1" class="item item--mod">
+        <div class="row">
+            <a class="btn" style="margin-top:50px;">拖动方块到空白处完成验证</a>
+            <div id="mpanel"></div>
+        </div>
+        <b class="item-close js-popup-close">x</b>-->
+    </div>
+</div>
+</body>
+<script language="JavaScript" type="text/javascript">
+    var request_email=false;
+    var request_tel=false;
+    var request_pwd=false;
+    var request_people=false;
+    function check(){
+        var opttype=document.getElementById("opttype").value;
+        if((opttype=="login" || opttype=="Clogin" )&& request_people)
+            return true;
+        if(request_email&&request_tel&&request_pwd&&request_people)
+            return true;
+        else
+            return false;
+    }
+
+
+    function checktel(){
+        var tel=document.getElementById("tel").value;
+        var xhr =new XMLHttpRequest();
+
+        xhr.onreadystatechange=function(){
+            //判断是否一切正常
+            if(xhr.readyState==4){
+                if(xhr.status==200){
+                    var msg = document.getElementById("label_tel");
+                    if(xhr.responseText=="false"){//说明该用户名，已经存在
+                        msg.innerHTML="<font color='red'>手机号已经存在,或账号长度不对，请检查</font><br>"
+                        request_tel=false;
+                        return false;
+                    }else{
+                        msg.innerHTML="<font color='blue'>可以使用</font>"
+                        request_tel=true;
+                        return true;
+                    }
+                }
+            }
+        }
+        xhr.open("POST","/checktel?tel="+tel);
+        xhr.send();
+
+    }
+    function checkemail(){
+        var email=document.getElementById("email").value;
+        if(!/@/.test(email)){
+            var msg = document.getElementById("label_email");
+            msg.innerHTML="<font color='red'>邮箱格式不正确，请检测</font><br>"
+            return ;
+        }
+        var xhr =new XMLHttpRequest();
+
+        xhr.onreadystatechange=function(){
+            //判断是否一切正常
+            if(xhr.readyState==4){
+                if(xhr.status==200){
+                    var msg = document.getElementById("label_email");
+                    if(xhr.responseText=="false"){//说明该用户名，已经存在
+                        msg.innerHTML="<font color='red'>邮箱已注册，请更换</font><br>"
+                        request_email=false;
+                        return false;
+                    }else{
+                        msg.innerHTML="<font color='blue'>可以使用</font>"
+                        request_email=true;
+                        return true;
+                    }
+                }
+            }
+        }
+        xhr.open("POST","/checkemail?email="+email);
+        xhr.send();
+
+    }
+
+</script>
+
+
+<script language="javascript" type="text/javascript">
+    function checkpwd() {
+        var p1 =document.getElementById("pwd").value;//获取密码框的值
+        var p2 =document.getElementById("agpwd").value;//获取重新输入的密码值
+        if(p1==null || p2==null)
+            return ;
+        var msg = document.getElementById("label_pwd");
+        if (p1 !=p2) {//判断两次输入的值是否一致，不一致则显示错误信息
+            msg.innerHTML="<font color='red'>两次输入密码不正确</font><br>";
+            request_pwd=false;
+            return false;
+        }
+        else {
+            msg.innerHTML = "";
+            request_pwd=true;
+            return true;
+        }
+
+    }
+
+    $(document).ready(function (){
+        $("input[type='submit']").click(function () {
+            $('#item1').popup({
+                time: 1000,
+                classAnimateShow: 'slideInUp',
+                classAnimateHide: 'fadeOut',
+                onPopupClose: function e() {
+                    // console.log('0')
+                },
+                onPopupInit: function e() {
+                    // console.log('1')
+                }
+            });
+        });
+    });
+
+    $('#mpanel').slideVerify({
+        type : 2,		//类型
+        vOffset : 5,	//误差量，根据需求自行调整
+        vSpace : 5,	//间隔
+        imgName : ['1.jpg','bg.jpg','pic07.jpg','pic06.jpg'],
+        imgSize : {
+            width: '200px',
+            height: '100px',
+        },
+        blockSize : {
+            width: '20px',
+            height: '20px',
+        },
+        barSize : {
+            width : '200px',
+            height : '20px',
+        },
+        ready : function() {
+        },
+        success : function() {
+            request_people=true;
+            alert('验证成功');
+            document.getElementById("login-form").submit();
+        },
+        error : function() {
+            alert('验证失败！');
+            request_people=false;
+        }
+    });
+</script>
+</html>
